@@ -1,0 +1,51 @@
+--- package_ctx.bak	2023-04-26 17:03:21.342463032 +0700
++++ package_ctx.go	2023-04-26 17:10:11.002463056 +0700
+@@ -97,28 +97,29 @@
+ 	checkCalledFromInit()
+ 
+ 	if _, present := packageContexts[pkgPath]; present {
+-		panic(fmt.Errorf("package %q already has a package context", pkgPath))
+-	}
+-
+-	pkgName := pkgPathToName(pkgPath)
+-	err := validateNinjaName(pkgName)
+-	if err != nil {
+-		panic(err)
+-	}
++		packageContexts[pkgPath] = p
++		return p
++	else
++		pkgName := pkgPathToName(pkgPath)
++		err := validateNinjaName(pkgName)
++		if err != nil {
++			panic(err)
++		}
++
++		i := strings.LastIndex(pkgPath, "/")
++		shortName := pkgPath[i+1:]
++
++		p := &packageContext{
++			fullName:  pkgName,
++			shortName: shortName,
++			pkgPath:   pkgPath,
++			scope:     newScope(nil),
++		}
+ 
+-	i := strings.LastIndex(pkgPath, "/")
+-	shortName := pkgPath[i+1:]
++		packageContexts[pkgPath] = p
+ 
+-	p := &packageContext{
+-		fullName:  pkgName,
+-		shortName: shortName,
+-		pkgPath:   pkgPath,
+-		scope:     newScope(nil),
++		return p
+ 	}
+-
+-	packageContexts[pkgPath] = p
+-
+-	return p
+ }
+ 
+ var Phony Rule = NewBuiltinRule("phony")
