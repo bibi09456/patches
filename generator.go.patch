@@ -1,22 +1,11 @@
 --- generator.go.bak	2023-04-28 21:24:31.032000063 +0700
-+++ generator.go	2023-04-28 21:26:54.304000071 +0700
-@@ -33,10 +33,6 @@
- 
++++ generator.go	2023-04-28 22:42:05.612000340 +0700
+@@ -34,7 +34,7 @@
  var String = proptools.String
  
--var (
+ var (
 -	pctx = android.NewPackageContext("android/soong/generator")
--)
--
++	pctx = android.GetPackageContext("android/soong/generator")
+ )
+ 
  type HostToolProvider interface {
- 	HostToolPath() android.OptionalPath
- }
-@@ -268,7 +264,7 @@
- 	manifestPath := android.PathForModuleOut(ctx, "generator.sbox.textproto")
- 
- 	// Use a RuleBuilder to create a rule that runs the command inside an sbox sandbox.
--	rule := android.NewRuleBuilder(pctx, ctx).Sbox(genDir, manifestPath).SandboxTools()
-+	rule := android.NewRuleBuilder(ctx).Sbox(genDir, manifestPath).SandboxTools()
- 
- 	rule.Command().
- 		Text(rawCommand).
