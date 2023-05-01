@@ -4,9 +4,8 @@
  	return p.scope
  }
  
-+func GetPackageContext(pkgPath string) {
-+	bruh := packageContexts[pkgPath]
-+	return bruh
++func (p *packageContext) GetPackageContext(pkgPath string) {
++	return p
 +}
 +
  var packageContexts = map[string]*packageContext{}
