@@ -1,12 +1,11 @@
---- package_ctx.go.bak	2023-04-28 22:23:54.996000275 +0700
-+++ package_ctx.go	2023-04-28 22:38:17.548000326 +0700
-@@ -87,6 +87,11 @@
+--- package_ctx.go.bak	2023-05-01 18:17:38.124000412 +0700
++++ package_ctx.go	2023-05-01 18:19:55.088000420 +0700
+@@ -87,6 +87,10 @@
  	return p.scope
  }
  
-+func GetPackageContext(pkgPath string) {
-+	bruh := packageContexts[pkgPath]
-+	return bruh
++func (p *packageContext) GetPackageContext(pkgPath string) {
++	return p
 +}
 +
  var packageContexts = map[string]*packageContext{}
