@@ -1,5 +1,5 @@
 --- generator.go.bak	2023-04-28 21:24:31.032000063 +0700
-+++ generator.go	2023-05-02 22:31:01.353334301 +0700
++++ generator.go	2023-05-02 23:12:18.085990520 +0700
 @@ -33,10 +33,6 @@
  
  var String = proptools.String
@@ -11,10 +11,25 @@
  type HostToolProvider interface {
  	HostToolPath() android.OptionalPath
  }
-@@ -266,21 +262,6 @@
+@@ -229,7 +225,7 @@
  
- 	genDir := android.PathForModuleGen(ctx)
- 	manifestPath := android.PathForModuleOut(ctx, "generator.sbox.textproto")
+ 	cmd := omniromExpandVariables(ctx, String(g.properties.Cmd))
+ 
+-	rawCommand, err := android.Expand(cmd, func(name string) (string, error) {
++	err := android.Expand(cmd, func(name string) (string, error) {
+ 		switch name {
+ 		case "location":
+ 			if len(g.properties.Tools) == 0 && len(toolFiles) == 0 {
+@@ -260,27 +256,6 @@
+ 		ctx.PropertyErrorf("cmd", "%s", err.Error())
+ 		return
+ 	}
+-
+-	// Dummy output dep
+-	dummyDep := android.PathForModuleGen(ctx, ".dummy_dep")
+-
+-	genDir := android.PathForModuleGen(ctx)
+-	manifestPath := android.PathForModuleOut(ctx, "generator.sbox.textproto")
 -
 -	// Use a RuleBuilder to create a rule that runs the command inside an sbox sandbox.
 -	rule := android.NewRuleBuilder(pctx, ctx).Sbox(genDir, manifestPath).SandboxTools()
