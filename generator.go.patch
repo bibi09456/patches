@@ -1,6 +1,16 @@
 --- generator.go.bak	2023-04-28 21:24:31.032000063 +0700
-+++ generator.go	2023-05-03 00:32:30.459438114 +0700
-@@ -33,10 +33,6 @@
++++ generator.go	2023-05-03 01:04:28.098665302 +0700
+@@ -16,9 +16,6 @@
+ package generator
+ 
+ import (
+-	"fmt"
+-	"strings"
+-
+ 	"github.com/google/blueprint"
+ 	"github.com/google/blueprint/bootstrap"
+ 	"github.com/google/blueprint/proptools"
+@@ -33,10 +30,6 @@
  
  var String = proptools.String
  
@@ -11,7 +21,7 @@
  type HostToolProvider interface {
  	HostToolPath() android.OptionalPath
  }
-@@ -226,61 +222,6 @@
+@@ -226,61 +219,6 @@
  			g.inputDeps = append(g.inputDeps, android.PathForSourceRelaxed(ctx, path))
  		}
  	}
