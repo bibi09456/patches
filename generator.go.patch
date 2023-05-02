@@ -1,5 +1,5 @@
 --- generator.go.bak	2023-04-28 21:24:31.032000063 +0700
-+++ generator.go	2023-05-02 23:12:18.085990520 +0700
++++ generator.go	2023-05-03 00:32:30.459438114 +0700
 @@ -33,10 +33,6 @@
  
  var String = proptools.String
@@ -11,19 +11,44 @@
  type HostToolProvider interface {
  	HostToolPath() android.OptionalPath
  }
-@@ -229,7 +225,7 @@
- 
- 	cmd := omniromExpandVariables(ctx, String(g.properties.Cmd))
- 
--	rawCommand, err := android.Expand(cmd, func(name string) (string, error) {
-+	err := android.Expand(cmd, func(name string) (string, error) {
- 		switch name {
- 		case "location":
- 			if len(g.properties.Tools) == 0 && len(toolFiles) == 0 {
-@@ -260,27 +256,6 @@
- 		ctx.PropertyErrorf("cmd", "%s", err.Error())
- 		return
+@@ -226,61 +222,6 @@
+ 			g.inputDeps = append(g.inputDeps, android.PathForSourceRelaxed(ctx, path))
+ 		}
  	}
+-
+-	cmd := omniromExpandVariables(ctx, String(g.properties.Cmd))
+-
+-	rawCommand, err := android.Expand(cmd, func(name string) (string, error) {
+-		switch name {
+-		case "location":
+-			if len(g.properties.Tools) == 0 && len(toolFiles) == 0 {
+-				return "", fmt.Errorf("at least one `tools` or `tool_files` is required if $(location) is used")
+-			}
+-
+-			if len(g.properties.Tools) > 0 {
+-				return tools[g.properties.Tools[0]].String(), nil
+-			} else {
+-				return tools[toolFiles[0].Rel()].String(), nil
+-			}
+-		case "genDir":
+-			return android.PathForModuleGen(ctx).String(), nil
+-		default:
+-			if strings.HasPrefix(name, "location ") {
+-				label := strings.TrimSpace(strings.TrimPrefix(name, "location "))
+-				if tool, ok := tools[label]; ok {
+-					return tool.String(), nil
+-				} else {
+-					return "", fmt.Errorf("unknown location label %q", label)
+-				}
+-			}
+-			return "", fmt.Errorf("unknown variable '$(%s)'", name)
+-		}
+-	})
+-
+-	if err != nil {
+-		ctx.PropertyErrorf("cmd", "%s", err.Error())
+-		return
+-	}
 -
 -	// Dummy output dep
 -	dummyDep := android.PathForModuleGen(ctx, ".dummy_dep")
